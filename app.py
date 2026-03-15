@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from modules.scanner import scan
 from modules.web_audit import audit
 from modules.scorer import score
+from modules.ssl_checker import check_ssl
 
 app = Flask(__name__)
 
@@ -20,13 +21,15 @@ def run_scan():
 
     scan_results = scan(domain)
     audit_results = audit(domain)
-    score_results = score(scan_results, audit_results)
-
+    ssl_results = check_ssl(domain)
+    score_results = score(scan_results, audit_results, ssl_results)
+    
     return render_template(
         "report.html",
         domain=domain,
         scan=scan_results,
         audit=audit_results,
+        ssl=ssl_results,
         score=score_results
     )
 

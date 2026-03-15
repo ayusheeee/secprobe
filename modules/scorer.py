@@ -1,8 +1,11 @@
-def score(scan_results, audit_results):
+def score(scan_results, audit_results, ssl_results=None):
     total_risk = 0
 
     total_risk += scan_results.get("risk_score", 0)
     total_risk += audit_results.get("risk_score", 0)
+    
+    if ssl_results:
+        total_risk += ssl_results.get("risk_score", 0)
 
     if total_risk == 0:
         grade = "A"

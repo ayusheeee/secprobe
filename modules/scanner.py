@@ -22,7 +22,7 @@ def scan(domain):
     }
 
     try:
-        scanner.scan(domain, "21-25,80,443,3306,3389,8080", "-sV --open")
+        scanner.scan(domain, "21-25,80,443,3306,3389,8080", "-T4 --open")
         
         for host in scanner.all_hosts():
             for proto in scanner[host].all_protocols():

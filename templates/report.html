@@ -21,6 +21,68 @@
             <div class="risk-score">Total risk score: {{ score.total_risk }}</div>
         </div>
 
+        <!-- SSL/TLS Check -->
+        <div class="section">
+            <h3>🔐 SSL/TLS Certificate</h3>
+
+            {% if ssl.error %}
+                <p class="error">SSL check error: {{ ssl.error }}</p>
+            {% else %}
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><strong>Valid</strong></td>
+                            <td>
+                                {% if ssl.valid %}
+                                    <span class="pass">✅ Yes</span>
+                                {% else %}
+                                    <span class="fail">❌ No</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Issuer</strong></td>
+                            <td>{{ ssl.issuer }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Expires</strong></td>
+                            <td>{{ ssl.expires }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Days left</strong></td>
+                            <td>
+                                {% if ssl.days_left < 30 %}
+                                    <span class="fail">{{ ssl.days_left }} days — expiring soon!</span>
+                                {% else %}
+                                    <span class="pass">{{ ssl.days_left }} days</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Self-signed</strong></td>
+                            <td>
+                                {% if ssl.self_signed %}
+                                    <span class="fail">❌ Yes — not trusted</span>
+                                {% else %}
+                                    <span class="pass">✅ No</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Expired</strong></td>
+                            <td>
+                                {% if ssl.expired %}
+                                    <span class="fail">❌ Yes</span>
+                                {% else %}
+                                    <span class="pass">✅ No</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+
         <!-- Network Scan -->
         <div class="section">
             <h3>🌐 Network Scan</h3>
