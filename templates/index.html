@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecProbe</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 SecProbe</h1>
+        <p class="subtitle">Enter a domain to scan its network and web security</p>
+
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form action="/scan" method="POST">
+            <input
+                type="text"
+                name="domain"
+                placeholder="e.g. scanme.nmap.org"
+                required
+            />
+            <button type="submit">Scan</button>
+        </form>
+
+        <p class="hint">Try: scanme.nmap.org — it's a legal scan target</p>
+    </div>
+</body>
+</html>

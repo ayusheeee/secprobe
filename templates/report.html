@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecProbe — {{ domain }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+
+        <a href="/" class="back">← Scan another domain</a>
+
+        <h1>🔍 SecProbe Report</h1>
+        <h2 class="domain">{{ domain }}</h2>
+
+        <!-- Grade -->
+        <div class="grade-box" style="border-color: {{ score.color }}">
+            <div class="grade" style="color: {{ score.color }}">{{ score.grade }}</div>
+            <div class="summary">{{ score.summary }}</div>
+            <div class="risk-score">Total risk score: {{ score.total_risk }}</div>
+        </div>
+
+        <!-- Network Scan -->
+        <div class="section">
+            <h3>🌐 Network Scan</h3>
+
+            {% if scan.error %}
+                <p class="error">Scan error: {{ scan.error }}</p>
+            {% elif scan.open_ports %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Port</th>
+                            <th>State</th>
+                            <th>Service</th>
+                            <th>Version</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for port in scan.open_ports %}
+                        <tr>
+                            <td>{{ port.port }}</td>
+                            <td>{{ port.state }}</td>
+                            <td>{{ port.name }}</td>
+                            <td>{{ port.version or "unknown" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="none">No open ports found.</p>
+            {% endif %}
+
+            {% if scan.risky_ports %}
+            <h4>⚠️ Risky ports detected</h4>
+            <ul>
+                {% for r in scan.risky_ports %}
+                <li><strong>Port {{ r.port }}</strong> — {{ r.reason }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <!-- Web Audit -->
+        <div class="section">
+            <h3>🔒 Web Security Audit</h3>
+
+            <p>
+                HTTPS:
+                {% if audit.https %}
+                    <span class="pass">✅ Enabled</span>
+                {% else %}
+                    <span class="fail">❌ Not enabled</span>
+                {% endif %}
+            </p>
+
+            {% if audit.error %}
+                <p class="error">Audit error: {{ audit.error }}</p>
+            {% else %}
+                <h4>Security headers</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header</th>
+                            <th>Status</th>
+                            <th>Value</th>
+                            <th>Why it matters</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for h in audit.headers %}
+                        <tr>
+                            <td>{{ h.name }}</td>
+                            <td>
+                                {% if h.present %}
+                                    <span class="pass">✅ Present</span>
+                                {% else %}
+                                    <span class="fail">❌ Missing</span>
+                                {% endif %}
+                            </td>
+                            <td class="mono">{{ h.value }}</td>
+                            <td>{{ h.description }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if audit.cookies %}
+                <h4>Cookies</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Secure</th>
+                            <th>HttpOnly</th>
+                            <th>SameSite</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in audit.cookies %}
+                        <tr>
+                            <td>{{ c.name }}</td>
+                            <td>{% if c.secure %}<span class="pass">✅</span>{% else %}<span class="fail">❌</span>{% endif %}</td>
+                            <td>{% if c.httponly %}<span class="pass">✅</span>{% else %}<span class="fail">❌</span>{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <p class="none">No cookies found.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+</html>
