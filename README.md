@@ -19,6 +19,17 @@ The project focuses on exploring cybersecurity concepts through practical implem
 ## Status
 Currently under development.
 
+## Screenshots
+
+### Port Scanning
+![Port Scanning](portscanning.jpeg)
+
+### Scan Results
+![Scan Results](result.jpeg)
+
+### Risk Score Analysis
+![Risk Score](riskscore.jpeg)
+
 ## Future Improvements
 - Advanced vulnerability detection
 - Real-time monitoring
